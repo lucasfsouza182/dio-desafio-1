@@ -10,6 +10,7 @@ menu = """
 saldo = 0
 limite = 500
 numero_saques = 0
+extrato = ""
 LIMITE_SAQUES = 3
 
 while True:
@@ -20,6 +21,7 @@ while True:
 
        if valor > 0:
         saldo += valor
+        extrato += f"Depósito: R$ {valor:.2f}\n"
        else:
           print("Erro! O valor do depósito não pode ser menor ou igual a 0")
 
@@ -38,17 +40,21 @@ while True:
        elif valor > 0:
           saldo -= valor
           numero_saques += 1
+          extrato += f"Saque: R$ {valor:.2f}\n"
           print(f"Saque de R${valor:.2f} realizado com sucesso!")
           
        else:
           print("Erro! O valor do saque é invalido")
           
-
-        
-
     elif opcao == "e":
+       print("\n================ EXTRATO ================")
+
+       print(f"\nSaldo: R$ {saldo:.2f}")
+       print("Não foram realizadas movimentações." if not extrato else extrato)
+       print("==========================================")
 
     elif opcao == "q":
+       break
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
