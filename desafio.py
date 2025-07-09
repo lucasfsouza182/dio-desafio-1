@@ -8,6 +8,9 @@ menu = """
 => """
 
 saldo = 0
+limite = 500
+numero_saques = 0
+LIMITE_SAQUES = 3
 
 while True:
     opcao = input(menu)
@@ -21,6 +24,27 @@ while True:
           print("Erro! O valor do depósito não pode ser menor ou igual a 0")
 
     elif opcao == "s":
+       valor = float(input("Informe o valor do saque: "))
+
+       if saldo < valor:
+          print("Erro! Não há saldo suficiente para o saque")
+
+       elif valor > limite:
+          print("Erro! Valor do saque excede limite")
+
+       elif numero_saques == 3:
+          print("Erro! Numero de saques diário execedido")
+
+       elif valor > 0:
+          saldo -= valor
+          numero_saques += 1
+          print(f"Saque de R${valor:.2f} realizado com sucesso!")
+          
+       else:
+          print("Erro! O valor do saque é invalido")
+          
+
+        
 
     elif opcao == "e":
 
