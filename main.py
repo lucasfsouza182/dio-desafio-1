@@ -3,6 +3,7 @@ from pessoa_fisica import PessoaFisica
 from conta_corrente import ContaCorrente
 from saque import Saque
 from deposito import Deposito
+from utils import log_transacao, ContasIterador
 
 def menu():
     menu = """\n
@@ -57,7 +58,7 @@ def sacar(clientes):
     if conta:
         cliente.realizar_transacao(conta, transacao)
 
-
+@log_transacao
 def exibir_extrato(clientes):
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
@@ -70,16 +71,19 @@ def exibir_extrato(clientes):
         return
 
     print("\n================ EXTRATO ================")
-    transacoes = conta.historico.transacoes
-    if not transacoes:
-        print("Não foram realizadas movimentações.")
-    else:
-        for transacao in transacoes:
-            print(f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}")
+    extrato = ""
+    tem_transacao = False
+    for transacao in conta.historico.gerar_relatorio(tipo_transacao="saque"):
+        tem_transacao = True
+        extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
+
+    if not tem_transacao:
+        extrato = "Não foram realizadas movimentações"
 
     print(f"\nSaldo:\n\tR$ {conta.saldo:.2f}")
     print("==========================================")
 
+@log_transacao
 def criar_cliente(clientes):
     cpf = input("Informe o CPF (somente número): ")
     cliente = filtrar_cliente(cpf, clientes)
@@ -94,7 +98,7 @@ def criar_cliente(clientes):
     clientes.append(cliente)
     print("\n=== Cliente criado com sucesso! ===")
 
-
+@log_transacao
 def criar_conta(numero_conta, clientes, contas):
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
@@ -108,7 +112,7 @@ def criar_conta(numero_conta, clientes, contas):
     print("\n=== Conta criada com sucesso! ===")
 
 def listar_contas(contas):
-    for conta in contas:
+    for conta in ContasIterador(contas):
         print("=" * 100)
         print(textwrap.dedent(str(conta)))
 

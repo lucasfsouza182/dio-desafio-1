@@ -1,4 +1,5 @@
 from historico import Historico
+from utils import log_transacao
 
 class Conta:
     def __init__(self, numero, cliente):
@@ -32,6 +33,7 @@ class Conta:
     def historico(self):
         return self._historico
     
+    @log_transacao
     def sacar(self, valor):
         saldo = self.saldo
         excedeu_saldo = valor > saldo
@@ -49,7 +51,7 @@ class Conta:
 
         return False
     
-
+    @log_transacao
     def depositar(self, valor):
         if valor > 0:
             self._saldo += valor
